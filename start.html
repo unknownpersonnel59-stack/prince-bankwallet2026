@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Start Earning - Bank Wallet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <style>
+      /* Match device theme automatically */
+      @media (prefers-color-scheme: dark) {
+        :root {
+          color-scheme: dark;
+        }
+      }
+      @media (prefers-color-scheme: light) {
+        :root {
+          color-scheme: light;
+        }
+      }
+
+      /* Green loader spinner */
+      .loader {
+        border: 5px solid rgba(255, 255, 255, 0.2);
+        border-top: 5px solid #22c55e;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+
+  <body
+    class="min-h-screen flex flex-col items-center justify-center bg-white text-gray-900 dark:bg-black dark:text-white px-6"
+  >
+    <main id="form-section" class="w-full max-w-xs space-y-6">
+      <!-- Logo -->
+      <div class="flex flex-col items-center mb-2">
+        <div
+          class="w-24 h-24 rounded-2xl bg-green-600 flex items-center justify-center mb-4"
+        >
+          <i class="fa-solid fa-landmark text-white text-5xl"></i>
+        </div>
+        <h1 class="text-3xl font-extrabold text-green-600 dark:text-green-500">
+          Bank Wallet
+        </h1>
+      </div>
+
+      <!-- Input Fields -->
+      <form id="walletForm" class="space-y-4">
+        <!-- Phone Number -->
+        <div>
+          <label
+            for="phone"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >Phone number</label
+          >
+          <input
+            type="tel"
+            id="phone"
+            maxlength="11"
+            placeholder="Enter phone number"
+            class="w-full px-4 py-3 rounded-md border border-green-600 bg-transparent focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-900 dark:text-white dark:placeholder-gray-400"
+          />
+          <p id="phoneCount" class="text-right text-xs text-gray-500 mt-1">
+            0/11
+          </p>
+        </div>
+
+        <!-- Account Name -->
+        <div>
+          <label
+            for="accountName"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >Account Name</label
+          >
+          <input
+            type="text"
+            id="accountName"
+            placeholder="Enter account name"
+            class="w-full px-4 py-3 rounded-md border border-green-600 bg-transparent focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-900 dark:text-white dark:placeholder-gray-400"
+          />
+        </div>
+
+        <!-- Account Number -->
+        <div>
+          <label
+            for="accountNumber"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >Account number</label
+          >
+          <input
+            type="text"
+            id="accountNumber"
+            maxlength="10"
+            placeholder="Enter account number"
+            class="w-full px-4 py-3 rounded-md border border-green-600 bg-transparent focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-900 dark:text-white dark:placeholder-gray-400"
+          />
+          <p id="acctCount" class="text-right text-xs text-gray-500 mt-1">
+            0/10
+          </p>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="w-full py-3 mt-6 bg-green-600 hover:bg-green-700 text-white font-bold rounded-md transition"
+        >
+          START EARNING
+        </button>
+      </form>
+    </main>
+
+    <!-- Loading Spinner Screen -->
+    <div
+      id="loading"
+      class="hidden flex flex-col items-center justify-center text-center"
+    >
+      <div class="loader mb-5"></div>
+      <p class="text-lg font-medium text-green-500">Starting mining...</p>
+    </div>
+
+    <script>
+      const phone = document.getElementById("phone");
+      const accountNumber = document.getElementById("accountNumber");
+      const phoneCount = document.getElementById("phoneCount");
+      const acctCount = document.getElementById("acctCount");
+      const form = document.getElementById("walletForm");
+      const formSection = document.getElementById("form-section");
+      const loading = document.getElementById("loading");
+
+      // Update counters
+      phone.addEventListener("input", () => {
+        phoneCount.textContent = `${phone.value.length}/11`;
+      });
+
+      accountNumber.addEventListener("input", () => {
+        acctCount.textContent = `${accountNumber.value.length}/10`;
+      });
+
+      // Handle form submission
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const user = {
+          phone: phone.value.trim(),
+          name: document.getElementById("accountName").value.trim(),
+          accountNumber: accountNumber.value.trim(),
+        };
+
+        if (!user.phone || !user.name || !user.accountNumber) {
+          alert("Please fill in all fields");
+          return;
+        }
+
+        // Save user to local storage
+        localStorage.setItem("bankWalletUser", JSON.stringify(user));
+
+        // Show loader
+        formSection.classList.add("hidden");
+        loading.classList.remove("hidden");
+
+        // Wait 10 seconds, then redirect
+        setTimeout(() => {
+          window.location.href = "dashboard.html";
+        }, 10000);
+      });
+    </script>
+  </body>
+</html>

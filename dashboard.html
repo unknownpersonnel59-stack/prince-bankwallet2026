@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bank Wallet Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+      @media (prefers-color-scheme: dark) { :root { color-scheme: dark; } }
+      @media (prefers-color-scheme: light) { :root { color-scheme: light; } }
+
+      .typing-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+        font-weight: bold;
+        font-size: 14px;
+        color: #22c55e;
+      }
+
+      #typingText {
+        border-right: 3px solid #22c55e;
+        white-space: nowrap;
+        overflow: hidden;
+        padding-right: 5px;
+      }
+    </style>
+  </head>
+
+  <body class="min-h-screen flex flex-col justify-between items-center bg-white dark:bg-black text-gray-900 dark:text-white px-6 py-8">
+
+    <!-- 🎅 CHRISTMAS TYPING MESSAGE TOP -->
+    <div class="typing-container mb-3 text-center">
+      <span class="text-2xl">🎅</span>
+      <span id="typingText"></span>
+    </div>
+
+    <!-- Wallet Card -->
+    <section class="w-full max-w-sm bg-green-600 text-white rounded-3xl p-5 space-y-4 shadow-md">
+      <div class="flex justify-between items-center">
+        <h2 class="text-xl font-bold">Wallet Balance</h2>
+        <a href="history.html" class="text-sm underline hover:text-gray-200 transition">
+          Transaction history >
+        </a>
+      </div>
+
+      <div id="walletBalance" class="text-5xl font-extrabold">₦0.00</div>
+
+      <div class="text-sm leading-relaxed">
+        <p>
+          NAME : <span id="userName" class="font-semibold">---</span>
+          &nbsp;&nbsp;
+          Account : <span id="userAccount" class="font-semibold">---</span>
+        </p>
+        <p>Current miner : <span class="font-semibold">Free Miner</span></p>
+      </div>
+
+      <!-- Buy Miner -->
+      <div class="flex items-center mt-4 space-x-2">
+        <button
+          id="buyMinerBtn"
+          class="flex-grow bg-black text-white py-3 font-bold rounded-xl hover:bg-gray-800 transition"
+        >
+          BUY MINER
+        </button>
+        <button
+          id="telegramBtn"
+          class="bg-black text-white py-3 px-4 rounded-xl hover:bg-gray-800 transition"
+          title="Join us on Telegram"
+        >
+          <i class="fa-brands fa-telegram fa-bounce text-xl"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- Buttons -->
+    <div class="w-full max-w-sm space-y-4 mt-10">
+      <button
+        id="mineBtn"
+        class="w-full flex items-center justify-center gap-3 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl transition"
+      >
+        <i class="fa-solid fa-wallet text-lg"></i>
+        Mine
+      </button>
+
+      <button
+        id="withdrawBtn"
+        class="w-full flex items-center justify-center gap-3 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl transition"
+      >
+        <i class="fa-solid fa-paper-plane text-lg"></i>
+        Withdraw
+      </button>
+
+      <div class="w-full max-w-sm flex items-center justify-center gap-2 mt-3 cursor-pointer"
+        onclick="window.location.href='watch.html'">
+        <i class="fa-brands fa-youtube text-red-600 text-2xl"></i>
+        <span class="text-sm font-semibold underline hover:text-gray-500 transition">
+          How it works
+        </span>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-10">
+      <div class="w-24 h-24 rounded-3xl bg-green-600 flex items-center justify-center">
+        <i class="fa-solid fa-landmark text-white text-5xl"></i>
+      </div>
+    </footer>
+
+    <audio id="successSound" src="success.mp3" preload="auto"></audio>
+
+    <script>
+      /* ---------- Telegram link from link.json ---------- */
+      let telegramLink = "#";
+
+      fetch("link.json")
+        .then(res => res.json())
+        .then(data => {
+          if (data.telegram) telegramLink = data.telegram;
+        });
+
+      document.getElementById("telegramBtn").onclick = () => {
+        if (telegramLink !== "#") window.open(telegramLink, "_blank");
+      };
+
+      /* ---------- Typing Effect ---------- */
+      const typingText = document.getElementById("typingText");
+      const messages = [
+        "Christmas Offer: Upgrade now and earn faster!",
+        "Special Promo: Double mining bonus this season!",
+        "Holiday Deal: Withdrawals are now faster!",
+        "Limited Offer: Premium Miner is 40% OFF!",
+      ];
+
+      let msgIndex = 0, charIndex = 0, isDeleting = false;
+
+      function typeEffect() {
+        const msg = messages[msgIndex];
+        typingText.textContent = isDeleting
+          ? msg.substring(0, charIndex--)
+          : msg.substring(0, charIndex++);
+
+        if (!isDeleting && charIndex > msg.length) {
+          isDeleting = true;
+          setTimeout(typeEffect, 1200);
+          return;
+        }
+        if (isDeleting && charIndex < 0) {
+          isDeleting = false;
+          msgIndex = (msgIndex + 1) % messages.length;
+        }
+        setTimeout(typeEffect, isDeleting ? 40 : 70);
+      }
+      setTimeout(typeEffect, 500);
+
+      /* ---------- Wallet Logic ---------- */
+      const walletBalance = document.getElementById("walletBalance");
+      const mineBtn = document.getElementById("mineBtn");
+      const withdrawBtn = document.getElementById("withdrawBtn");
+      const buyMinerBtn = document.getElementById("buyMinerBtn");
+      const successSound = document.getElementById("successSound");
+
+      const userData = JSON.parse(localStorage.getItem("bankWalletUser"));
+      if (userData) {
+        userName.textContent = userData.name;
+        userAccount.textContent = userData.accountNumber;
+      }
+
+      let balance = parseFloat(localStorage.getItem("walletBalance")) || 0;
+      updateBalance();
+
+      function updateBalance() {
+        walletBalance.textContent =
+          "₦" + balance.toLocaleString("en-NG", { minimumFractionDigits: 2 });
+      }
+
+      mineBtn.addEventListener("click", () => {
+        if (balance >= 86000) {
+          Swal.fire("Mining Limit Reached", "You have already mined ₦86,000.", "info");
+          return;
+        }
+
+        Swal.fire({
+          title: "🏆 Welcome new user",
+          html: `Free miner can only mine <b>₦86,000</b> daily.`,
+          showCancelButton: true,
+          confirmButtonColor: "#22c55e",
+        }).then(r => r.isConfirmed && startMining());
+      });
+
+      function startMining() {
+        let t = 10;
+        Swal.fire({
+          title: "⛏️ Mining in progress...",
+          html: `<b>${t}</b> seconds remaining`,
+          allowOutsideClick: false,
+          didOpen: () => {
+            const b = Swal.getHtmlContainer().querySelector("b");
+            const timer = setInterval(() => {
+              b.textContent = --t;
+              if (t <= 0) {
+                clearInterval(timer);
+                Swal.close();
+                finishMining();
+              }
+            }, 1000);
+          }
+        });
+      }
+
+      function finishMining() {
+        balance = 86000;
+        localStorage.setItem("walletBalance", balance);
+        updateBalance();
+
+        let tx = JSON.parse(localStorage.getItem("transactionHistory")) || [];
+        tx.push({
+          type: "Mining",
+          amount: "₦86,000",
+          status: "Successful",
+          date: new Date().toLocaleString(),
+        });
+        localStorage.setItem("transactionHistory", JSON.stringify(tx));
+
+        successSound.play().catch(() => {});
+        Swal.fire("Success", "You’ve successfully mined ₦86,000.", "success");
+      }
+
+      withdrawBtn.onclick = () => location.href = "withdraw.html";
+      buyMinerBtn.onclick = () => location.href = "upgrade.html";
+
+      /* ---------- Telegram Popup ---------- */
+      window.addEventListener("load", () => {
+        if (!localStorage.getItem("telegramPopupSeen")) {
+          Swal.fire({
+            title: "💬 Join Our Telegram Community!",
+            showCancelButton: true,
+            confirmButtonColor: "#22c55e",
+          }).then(r => {
+            localStorage.setItem("telegramPopupSeen", "true");
+            if (r.isConfirmed && telegramLink !== "#") {
+              window.open(telegramLink, "_blank");
+            }
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

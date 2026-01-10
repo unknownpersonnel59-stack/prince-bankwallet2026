@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment Failed | Bank Wallet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+  </head>
+
+  <body
+    class="min-h-screen flex flex-col justify-center items-center bg-white dark:bg-black text-gray-900 dark:text-white px-6 py-10"
+  >
+    <!-- Failed Card -->
+    <div
+      class="w-full max-w-md bg-red-50 dark:bg-red-900/30 border border-red-500 rounded-2xl p-6 mb-8 text-center shadow-lg"
+    >
+      <i class="fa-solid fa-circle-xmark text-red-600 text-5xl mb-4"></i>
+      <h2 class="text-2xl font-bold text-red-600 mb-2">Payment Failed</h2>
+      <p class="text-gray-700 dark:text-gray-300 text-sm mb-4">
+        We could not confirm your payment. Please try again or contact support
+        if your money was debited.
+      </p>
+
+      <div
+        class="flex justify-between items-center text-sm border-t border-gray-300 dark:border-gray-700 pt-4 mt-4"
+      >
+        <span class="font-semibold text-gray-600 dark:text-gray-300"
+          >Amount:</span
+        >
+        <span class="text-gray-800 dark:text-white font-semibold">₦8,600</span>
+      </div>
+
+      <div
+        class="flex justify-between items-center text-sm border-t border-gray-300 dark:border-gray-700 pt-3 mt-3"
+      >
+        <span class="font-semibold text-gray-600 dark:text-gray-300"
+          >Status:</span
+        >
+        <span class="text-red-600 font-semibold">Failed</span>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex gap-4 mb-2">
+      <button
+        onclick="window.location.href='buy.html'"
+        class="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-xl transition"
+      >
+        Retry Payment
+      </button>
+
+      <button
+        onclick="window.location.href='dashboard.html'"
+        class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-xl transition"
+      >
+        Back to Dashboard
+      </button>
+    </div>
+
+    <!-- Contact Support (NOT a button) -->
+    <div class="mt-3 mb-4">
+      <a
+        href="https://t.me/rexnaija"
+        target="_blank"
+        class="flex items-center justify-center gap-2 text-blue-600 dark:text-blue-400 font-semibold text-sm hover:underline"
+      >
+        <i class="fa-brands fa-telegram text-lg"></i>
+        Contact Support
+      </a>
+    </div>
+
+    <!-- Support note -->
+    <p class="text-xs text-gray-500 dark:text-gray-400 max-w-md text-center">
+      If you were debited and this message remains, contact
+      <span class="underline">@rexnaija on Telegram</span> with your
+      transaction details.
+    </p>
+
+    <!-- Footer -->
+    <footer class="mt-12 text-center text-gray-500 dark:text-gray-400 text-sm">
+      Bank Wallet © 2025
+    </footer>
+  </body>
+</html>

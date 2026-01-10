@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Payment Successful — Bank Wallet</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lottie for success animation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.9.6/lottie.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+      body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+      .loader {
+        border: 6px solid #e5e7eb;
+        border-top: 6px solid #22c55e;
+        border-radius: 50%;
+        width: 64px;
+        height: 64px;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+      /* small helper for code box */
+      .code-box { letter-spacing: 0.15em; font-weight:700; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace; }
+    </style>
+  </head>
+
+  <body class="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white flex items-center justify-center p-6">
+    <div id="container" class="w-full max-w-md bg-white dark:bg-[#071018] rounded-2xl p-6 shadow-lg text-center">
+      <!-- animation area (Lottie) -->
+      <div id="anim" class="mx-auto w-36 h-36"></div>
+
+      <h1 class="text-2xl font-bold text-green-600 mb-2">Payment Successful</h1>
+      <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">Your payment of <strong>₦8,600</strong> was successful.</p>
+
+      <!-- passcode area -->
+      <div id="passcodeArea" class="bg-gray-50 dark:bg-[#042029] border border-gray-200 dark:border-[#093033] rounded-xl p-4 mb-4">
+        <div class="text-sm text-gray-500 dark:text-gray-300 mb-2">Your withdrawal code</div>
+        <div id="codePlaceholder" class="text-2xl code-box text-gray-900 dark:text-white">— — — — — — — — — — —</div>
+        <div id="codeError" class="hidden text-sm text-red-500 mt-2">Could not load code. Make sure <code>passcode.txt</code> is available on the server.</div>
+      </div>
+
+      <!-- controls -->
+      <div class="flex gap-3 justify-center mb-3">
+        <button id="copyBtn" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-sm inline-flex items-center gap-2">
+          <i class="fa-regular fa-copy"></i> Copy
+        </button>
+
+        <a id="downloadLink" class="px-4 py-2 border border-green-600 text-green-600 rounded-lg hover:bg-green-50 dark:hover:bg-green-900 inline-flex items-center gap-2" download="passcode.txt" href="#">
+          <i class="fa-solid fa-download"></i> Download
+        </a>
+      </div>
+
+      <div class="text-xs text-gray-500 dark:text-gray-400 mb-4">Keep the code private. Use it to complete your withdrawal.</div>
+
+      <div class="flex gap-3 justify-center">
+        <a href="dashboard.html" class="px-4 py-2 rounded-lg bg-gray-100 dark:bg-[#06202b] text-gray-800 dark:text-gray-100">Back to Dashboard</a>
+        <a href="passcode.html" class="px-4 py-2 rounded-lg border border-green-600 text-green-600">Use Code Now</a>
+      </div>
+    </div>
+
+    <script>
+      // Try to fetch passcode.txt from same origin root.
+      // NOTE: passcode.txt must be accessible via the webserver (e.g. placed next to this HTML and served).
+      const codeEl = document.getElementById('codePlaceholder');
+      const codeError = document.getElementById('codeError');
+      const copyBtn = document.getElementById('copyBtn');
+      const downloadLink = document.getElementById('downloadLink');
+
+      async function loadPasscode() {
+        try {
+          const resp = await fetch('/passcode.txt', { cache: 'no-store' });
+          if (!resp.ok) throw new Error('Not found');
+          const text = (await resp.text()).trim();
+          if (!text) throw new Error('Empty file');
+          // show code (masking spacing if long)
+          codeEl.textContent = text;
+          downloadLink.href = '/passcode.txt';
+          codeError.classList.add('hidden');
+          return text;
+        } catch (err) {
+          console.warn('Could not load passcode.txt:', err);
+          codeEl.textContent = '— — — — — — — — — — —';
+          codeError.classList.remove('hidden');
+          // disable copy/download if not available
+          copyBtn.disabled = true;
+          copyBtn.classList.add('opacity-50', 'cursor-not-allowed');
+          downloadLink.classList.add('opacity-50', 'pointer-events-none');
+          return null;
+        }
+      }
+
+      // load lottie animation
+      function loadAnimation() {
+        if (window.lottie) {
+          lottie.loadAnimation({
+            container: document.getElementById('anim'),
+            renderer: 'svg',
+            loop: false,
+            autoplay: true,
+            path: 'https://assets4.lottiefiles.com/packages/lf20_jbrw3hcz.json' // success tick
+          });
+        }
+      }
+
+      // copy handler
+      copyBtn.addEventListener('click', async () => {
+        const code = codeEl.textContent.trim();
+        if (!code || code.startsWith('—')) return;
+        try {
+          await navigator.clipboard.writeText(code);
+          copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i> Copied';
+          setTimeout(() => copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i> Copy', 2000);
+        } catch (e) {
+          alert('Copy failed — try manually selecting the code.');
+        }
+      });
+
+      // init
+      (async () => {
+        loadAnimation();
+        const code = await loadPasscode();
+
+        // Optional: if you want to auto-redirect to passcode.html after showing code:
+        // setTimeout(()=> window.location.href='passcode.html', 7000);
+      })();
+
+      // Helpful note: If your server places passcode.txt in a subfolder, change fetch('/passcode.txt') to fetch('/folder/passcode.txt')
+    </script>
+  </body>
+</html>

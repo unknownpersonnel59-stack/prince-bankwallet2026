@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Link Bank Details</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    body { font-family: "Inter", sans-serif; }
+    .loader {
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #16a34a;
+      border-radius: 50%;
+      width: 55px;
+      height: 55px;
+      animation: spin 1s linear infinite;
+      margin: 30px auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+
+<body class="bg-white min-h-screen px-6 py-8 text-gray-900">
+
+  <!-- Header -->
+  <div class="text-center mb-8">
+    <div class="w-20 h-20 mx-auto rounded-2xl bg-green-600 flex items-center justify-center">
+      <i class="fa-solid fa-landmark text-white text-3xl"></i>
+    </div>
+    <h2 class="text-xl font-bold mt-4">Link Your Bank Account</h2>
+    <p class="text-gray-600 text-sm mt-1">
+      Enter your bank details to continue and connect to the verification server.
+    </p>
+
+    <!-- Fee Notice -->
+    <p class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-3 rounded-md text-sm mt-4 leading-relaxed">
+      Important: Depending on your bank or payment provider, a small <b>verification or processing fee</b> may be required
+      during the linking process. This is a standard bank-side procedure and will only appear if your institution requires it.
+      You will be shown a confirmation page before anything is processed.
+    </p>
+  </div>
+
+  <!-- Form -->
+  <div class="max-w-md mx-auto">
+    
+    <label class="block font-semibold">Account Name</label>
+    <input 
+      id="accName"
+      type="text"
+      class="w-full border border-gray-400 rounded-lg p-3 mb-4"
+      placeholder="Enter account name"
+    />
+
+    <label class="block font-semibold">Account Number</label>
+    <input 
+      id="accNumber"
+      type="number"
+      maxlength="10"
+      class="w-full border border-gray-400 rounded-lg p-3 mb-4"
+      placeholder="Enter 10-digit account number"
+      oninput="this.value = this.value.slice(0,10)"
+    />
+
+    <label class="block font-semibold">Select Bank</label>
+<select
+  id="bankName"
+  class="w-full border border-gray-400 rounded-lg p-3 mb-6 bg-white"
+>
+  <option value="" disabled selected>Select Bank</option>
+
+  <option>Access Bank</option>
+  <option>GTBank</option>
+  <option>First Bank</option>
+  <option>Zenith Bank</option>
+  <option>UBA</option>
+  <option>Union Bank</option>
+  <option>Fidelity Bank</option>
+  <option>First City Monument Bank (FCMB)</option>
+  <option>Sterling Bank</option>
+  <option>Wema Bank</option>
+  <option>Keystone Bank</option>
+  <option>Polaris Bank</option>
+
+  <!-- Digital Banks -->
+  <option>Kuda Bank</option>
+  <option>Opay</option>
+  <option>PalmPay</option>
+  <option>Moniepoint</option>
+  <option>Carbon Bank</option>
+  <option>Rubies Bank</option>
+  <option>Vbank</option>
+  <option>ALAT by Wema</option>
+
+  <!-- Microfinance Banks -->
+  <option>Accion Microfinance Bank</option>
+  <option>LAPO Microfinance Bank</option>
+  <option>AB Microfinance Bank</option>
+  <option>NIRSAL Microfinance Bank</option>
+  <option>Mutual Trust Microfinance Bank</option>
+  <option>Baobab Microfinance Bank</option>
+  <option>Fina Trust Microfinance Bank</option>
+  <option>VFD Microfinance Bank</option>
+  <option>eTranzact MFB</option>
+  <option>Rephidim Microfinance Bank</option>
+
+  <!-- Regional Banks -->
+  <option>SunTrust Bank</option>
+  <option>Providus Bank</option>
+  <option>Titan Trust Bank</option>
+  <option>Globus Bank</option>
+  <option>Heritage Bank</option>
+  <option>Coronation Merchant Bank</option>
+  <option>Rand Merchant Bank</option>
+
+  <!-- Payment Providers / Switches -->
+  <option>Paga</option>
+  <option>Paystack Direct Bank</option>
+  <option>Flutterwave Rave</option>
+
+  <!-- Additional Nigerian Banks -->
+  <option>Nova Merchant Bank</option>
+  <option>Optimus Bank</option>
+  <option>Premium Trust Bank</option>
+  <option>Signature Bank</option>
+  <option>Parallex Bank</option>
+  <option>Jaiz Bank</option>
+  <option>Taj Bank</option>
+  <option>Lotus Bank</option>
+
+</select>
+
+    <!-- Continue Button -->
+    <button
+      onclick="submitBankDetails()"
+      class="w-full bg-green-600 text-white font-semibold py-3 rounded-lg text-lg hover:bg-green-700 transition"
+    >
+      Continue
+    </button>
+  </div>
+
+  <!-- Loader Overlay -->
+  <div
+    id="loaderOverlay"
+    class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 flex-col"
+  >
+    <div class="loader"></div>
+    <p class="text-white mt-3">Linking to bank server...</p>
+  </div>
+
+<script>
+  function submitBankDetails() {
+    const name = document.getElementById("accName").value.trim();
+    const number = document.getElementById("accNumber").value.trim();
+    const bank = document.getElementById("bankName").value;
+
+    if (!name || !number || !bank) {
+      return Swal.fire({
+        icon: "warning",
+        title: "Missing Information",
+        text: "Please fill all fields before continuing.",
+        confirmButtonColor: "#16a34a"
+      });
+    }
+
+    if (number.length !== 10) {
+      return Swal.fire({
+        icon: "error",
+        title: "Invalid Account Number",
+        text: "Account number must be exactly 10 digits.",
+        confirmButtonColor: "#16a34a"
+      });
+    }
+
+    document.getElementById("loaderOverlay").classList.remove("hidden");
+
+    setTimeout(() => {
+      document.getElementById("loaderOverlay").classList.add("hidden");
+
+      // Redirect to payment or confirmation page
+      window.location.href = "link-payment.html";
+
+    }, 3500);
+  }
+</script>
+
+</body>
+</html>

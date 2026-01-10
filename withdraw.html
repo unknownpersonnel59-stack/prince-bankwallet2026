@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Withdraw - Bank Wallet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+      @media (prefers-color-scheme: dark) {
+        :root {
+          color-scheme: dark;
+        }
+      }
+      @media (prefers-color-scheme: light) {
+        :root {
+          color-scheme: light;
+        }
+      }
+    </style>
+  </head>
+
+  <body
+    class="min-h-screen flex flex-col justify-start items-center bg-white dark:bg-black text-gray-900 dark:text-white px-6 py-10"
+  >
+    <h1 class="text-xl font-bold mb-6 text-center">
+      Input your withdraw details
+    </h1>
+
+    <!-- Icon -->
+    <div
+      class="w-20 h-20 rounded-2xl bg-green-600 flex items-center justify-center mb-8"
+    >
+      <i class="fa-solid fa-landmark text-white text-3xl"></i>
+    </div>
+
+    <!-- Withdraw Form -->
+    <form
+      id="withdrawForm"
+      class="w-full max-w-sm space-y-5 text-gray-900 dark:text-white"
+    >
+      <!-- Account Number -->
+      <div>
+        <input
+          type="text"
+          id="accountNumber"
+          maxlength="10"
+          class="w-full border border-green-600 rounded-lg p-3 bg-transparent focus:outline-none"
+          placeholder="Account number"
+          required
+        />
+        <p class="text-right text-xs mt-1 text-gray-400">10/10</p>
+      </div>
+
+      <!-- Name -->
+      <div>
+        <input
+          type="text"
+          id="accountName"
+          class="w-full border border-green-600 rounded-lg p-3 bg-transparent focus:outline-none"
+          placeholder="Account name"
+          required
+        />
+      </div>
+
+      <!-- Select Bank -->
+      <div>
+        <select
+          id="bankName"
+          class="w-full border border-green-600 rounded-lg p-3 bg-transparent focus:outline-none"
+          required
+        >
+          <option value="" disabled selected>Select Bank</option>
+        </select>
+      </div>
+
+      <!-- Fixed Amount -->
+      <div>
+        <input
+          type="text"
+          id="withdrawAmount"
+          class="w-full border border-green-600 rounded-lg p-3 bg-gray-800 text-gray-100"
+          value="86,000"
+          readonly
+        />
+        <p class="text-xs text-gray-400 mt-1">Fixed withdrawal amount</p>
+      </div>
+
+      <!-- Withdraw Button -->
+      <button
+        type="submit"
+        class="w-full bg-green-600 hover:bg-green-700 text-black font-bold py-3 rounded-lg transition"
+      >
+        WITHDRAW
+      </button>
+    </form>
+
+    <script>
+      // ✅ Load user data
+      const userData = JSON.parse(localStorage.getItem("bankWalletUser"));
+      const balance = parseFloat(localStorage.getItem("walletBalance")) || 0;
+
+      if (userData) {
+        document.getElementById("accountNumber").value = userData.accountNumber;
+        document.getElementById("accountName").value = userData.name;
+      }
+
+      // ✅ List of 70 Nigerian banks
+      const banks = [
+        "Access Bank","Citibank Nigeria","Ecobank Nigeria","Fidelity Bank","First Bank of Nigeria",
+        "First City Monument Bank","Guaranty Trust Bank","Heritage Bank","Keystone Bank","Polaris Bank",
+        "Stanbic IBTC Bank","Standard Chartered Bank","Sterling Bank","Union Bank of Nigeria",
+        "United Bank for Africa","Unity Bank","Wema Bank","Zenith Bank","Titan Trust Bank","Jaiz Bank",
+        "Opay","Moniepoint","PalmPay","Kuda Microfinance Bank","VFD Microfinance Bank","Rubies Bank",
+        "Sparkle Bank","Globus Bank","Providus Bank","SunTrust Bank","ALAT by Wema","Coronation Merchant Bank",
+        "Rand Merchant Bank","Nova Merchant Bank","Guaranty Trust Holding Company","FSDH Merchant Bank",
+        "Parallex Bank","PremiumTrust Bank","Signature Bank","Lotus Bank","TAJBank","LivingTrust Mortgage Bank",
+        "Infinity Microfinance Bank","Empire Trust Bank","Mutual Trust Microfinance Bank","Eyowo",
+        "9Payment Service Bank","Hope PSBank","MTN MoMo PSB","Airtel Smartcash PSB","Paystack MFB","Carbon MFB",
+        "FairMoney MFB","Okash MFB","Renmoney MFB","Lidya MFB","Specta MFB","Quickteller MFB","KashNow Bank",
+        "Branch MFB","Kuda Savings","Absa Bank","Nova MFB","Zedvance MFB","AB Microfinance Bank","BoI Bank",
+        "Covenant MFB","Infinity Trust MFB","Seedvest MFB","Amju MFB","KCMB Microfinance Bank"
+      ];
+
+      const bankSelect = document.getElementById("bankName");
+      banks.forEach(bank => {
+        const option = document.createElement("option");
+        option.value = bank;
+        option.textContent = bank;
+        bankSelect.appendChild(option);
+      });
+
+      // ✅ Withdraw action
+      const withdrawForm = document.getElementById("withdrawForm");
+
+      withdrawForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        if (balance < 86000) {
+          Swal.fire({
+            icon: "error",
+            title: "Insufficient Balance",
+            text: "You need ₦860,000 to withdraw.",
+            confirmButtonColor: "#22c55e",
+          });
+          return;
+        }
+
+        Swal.fire({
+          title: "Confirm Withdrawal",
+          text: "Are you sure you want to withdraw ₦860,000?",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#22c55e",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, Withdraw",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            processWithdrawal();
+          }
+        });
+      });
+
+      // ✅ Process with loader only — no balance deduction here
+      function processWithdrawal() {
+        Swal.fire({
+          title: "Processing...",
+          html: "Please wait while we process your withdrawal.",
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
+
+        // Wait for 3 seconds, then go to passcode.html
+        setTimeout(() => {
+          window.location.href = "passcode.html";
+        }, 3000);
+      }
+    </script>
+  </body>
+</html>

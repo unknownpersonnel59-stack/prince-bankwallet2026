@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upgrade Plan - Bank Wallet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+
+  <body
+    class="min-h-screen bg-gradient-to-b from-green-50 to-white dark:from-black dark:to-gray-900 text-gray-900 dark:text-white flex flex-col items-center px-4 py-8"
+  >
+    <h1 class="text-3xl font-extrabold mb-2 text-green-600 text-center">
+      Upgrade Your Mining Power ⚡
+    </h1>
+    <p class="text-center text-sm text-gray-600 dark:text-gray-400 mb-8 max-w-md">
+      Unlock higher earnings and faster mining speeds. Choose a plan that suits
+      your financial goal and start earning more today.
+    </p>
+
+    <div class="grid gap-6 w-full max-w-2xl">
+      <!-- BASIC PLAN -->
+      <div
+        class="bg-gradient-to-r from-green-600 to-green-700 text-white rounded-3xl p-6 shadow-xl transform hover:scale-105 transition-all duration-300"
+      >
+        <div class="flex justify-between items-center mb-3">
+          <h2 class="text-2xl font-bold">Basic Plan</h2>
+          <i class="fa-solid fa-leaf text-3xl opacity-80"></i>
+        </div>
+        <p class="text-lg font-semibold mb-1">₦7,000</p>
+        <p class="text-sm mb-4 text-green-100">
+          💰 Earn up to <b>₦172,000</b>
+        </p>
+        <ul class="text-sm space-y-1 mb-5 text-green-100">
+          <li>✔️ Access to standard mining speed</li>
+          <li>✔️ Daily mining rewards up to ₦24,000</li>
+          <li>✔️ Withdraw anytime after mining</li>
+        </ul>
+        <button
+          class="bg-black hover:bg-gray-800 text-white py-2 px-6 rounded-xl font-semibold transition"
+          onclick="upgradePlan(7000, 172000, 'Basic Plan')"
+        >
+          Upgrade to Basic
+        </button>
+      </div>
+
+      <!-- SILVER PLAN -->
+      <div
+        class="bg-gradient-to-r from-gray-700 to-gray-900 text-white rounded-3xl p-6 shadow-xl transform hover:scale-105 transition-all duration-300"
+      >
+        <div class="flex justify-between items-center mb-3">
+          <h2 class="text-2xl font-bold">Silver Plan</h2>
+          <i class="fa-solid fa-gem text-3xl opacity-80"></i>
+        </div>
+        <p class="text-lg font-semibold mb-1">₦15,000</p>
+        <p class="text-sm mb-4 text-gray-300">
+          💰 Earn up to <b>₦380,000</b>
+        </p>
+        <ul class="text-sm space-y-1 mb-5 text-gray-300">
+          <li>✔️ Double mining speed</li>
+          <li>✔️ Increased daily mining cap</li>
+          <li>✔️ Priority withdrawals</li>
+        </ul>
+        <button
+          class="bg-white text-gray-900 py-2 px-6 rounded-xl font-semibold hover:bg-gray-100 transition"
+          onclick="upgradePlan(15000, 380000, 'Silver Plan')"
+        >
+          Upgrade to Silver
+        </button>
+      </div>
+
+      <!-- GOLD PLAN -->
+      <div
+        class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-3xl p-6 shadow-xl transform hover:scale-105 transition-all duration-300"
+      >
+        <div class="flex justify-between items-center mb-3">
+          <h2 class="text-2xl font-bold">Gold Plan</h2>
+          <i class="fa-solid fa-crown text-3xl opacity-90"></i>
+        </div>
+        <p class="text-lg font-semibold mb-1">₦25,000</p>
+        <p class="text-sm mb-4 text-yellow-100">
+          💰 Earn up to <b>₦640,000</b>
+        </p>
+        <ul class="text-sm space-y-1 mb-5 text-yellow-100">
+          <li>✔️ 3× mining speed</li>
+          <li>✔️ High-profit mining algorithm</li>
+          <li>✔️ Instant withdrawals after mining</li>
+        </ul>
+        <button
+          class="bg-black hover:bg-gray-800 text-white py-2 px-6 rounded-xl font-semibold transition"
+          onclick="upgradePlan(25000, 640000, 'Gold Plan')"
+        >
+          Upgrade to Gold
+        </button>
+      </div>
+
+      <!-- DIAMOND PLAN -->
+      <div
+        class="bg-gradient-to-r from-purple-700 to-indigo-700 text-white rounded-3xl p-6 shadow-xl transform hover:scale-105 transition-all duration-300"
+      >
+        <div class="flex justify-between items-center mb-3">
+          <h2 class="text-2xl font-bold">Diamond Plan</h2>
+          <i class="fa-solid fa-gem text-3xl opacity-90"></i>
+        </div>
+        <p class="text-lg font-semibold mb-1">₦50,000</p>
+        <p class="text-sm mb-4 text-purple-200">
+          💰 Earn up to <b>₦1,250,000</b>
+        </p>
+        <ul class="text-sm space-y-1 mb-5 text-purple-200">
+          <li>✔️ 5× ultra-speed mining</li>
+          <li>✔️ Unlimited daily mining potential</li>
+          <li>✔️ Lifetime withdrawal access</li>
+        </ul>
+        <button
+          class="bg-white text-purple-800 py-2 px-6 rounded-xl font-semibold hover:bg-purple-100 transition"
+          onclick="upgradePlan(50000, 1250000, 'Diamond Plan')"
+        >
+          Upgrade to Diamond
+        </button>
+      </div>
+    </div>
+
+    <footer class="mt-10">
+      <button
+        onclick="window.location.href='dashboard.html'"
+        class="text-sm text-green-600 underline hover:text-green-700"
+      >
+        ← Back to Dashboard
+      </button>
+    </footer>
+
+    <script>
+      function upgradePlan(amount, earningLimit, planName) {
+        Swal.fire({
+          title: `Upgrade to ${planName}`,
+          html: `
+            <p class='text-gray-700 dark:text-gray-300 text-sm'>
+              You are about to upgrade to the <b>${planName}</b> for 
+              <b>₦${amount.toLocaleString()}</b>. <br><br>
+              After payment, your mining limit will increase to 
+              <b>₦${earningLimit.toLocaleString()}</b>.
+            </p>
+          `,
+          icon: "info",
+          showCancelButton: true,
+          confirmButtonText: "Proceed to Payment",
+          cancelButtonText: "Cancel",
+          confirmButtonColor: "#22c55e",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Save selected plan details for payment page
+            const plan = {
+              name: planName,
+              amount: amount,
+              earningLimit: earningLimit,
+              date: new Date().toLocaleString(),
+            };
+            localStorage.setItem("selectedPlan", JSON.stringify(plan));
+
+            // Redirect to payment page
+            window.location.href = "payment.html";
+          }
+        });
+      }
+    </script>
+  </body>
+  </html>

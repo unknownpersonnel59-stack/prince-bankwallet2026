@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment - Bank Wallet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      body {
+        background-color: #ecfdf5;
+        font-family: "Inter", sans-serif;
+      }
+      .info-box {
+        background: #fff;
+        border-radius: 0.75rem;
+        padding: 1.2rem 1.2rem;
+        max-width: 420px;
+        width: 100%;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
+        margin-top: 1rem;
+      }
+      .info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.95rem 0;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      .info-item:last-child {
+        border-bottom: none;
+      }
+      .label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 700;
+        color: #111827;
+        font-size: 0.95rem;
+      }
+      .value {
+        font-weight: 400;
+        color: #374151;
+        font-size: 0.95rem;
+      }
+      .copy-btn {
+        background-color: #16a34a;
+        color: white;
+        border: none;
+        padding: 0.3rem 0.7rem;
+        border-radius: 0.4rem;
+        font-size: 0.8rem;
+        cursor: pointer;
+      }
+      .copy-btn:hover {
+        background-color: #15803d;
+      }
+      .plan-box {
+        background-color: #d1fae5;
+        color: #065f46;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        margin-top: 0.75rem;
+        font-weight: 600;
+        text-align: center;
+        max-width: 420px;
+      }
+    </style>
+  </head>
+
+  <body class="flex flex-col items-center min-h-screen py-6 px-4 text-gray-900">
+    <h1 class="text-xl font-bold text-green-700 mb-2">Bank Transfer</h1>
+    <p class="text-gray-700 mb-3 text-center text-sm">
+      Complete this transfer to proceed
+    </p>
+
+    <div class="info-box">
+      <div class="info-item">
+        <span class="label">Amount</span>
+        <span id="planAmount" class="value text-green-700 font-semibold">₦0</span>
+      </div>
+
+      <div class="info-item">
+        <span class="label">
+          <i class="fa-solid fa-hashtag text-green-600"></i> Acc No
+        </span>
+        <div class="flex items-center gap-2">
+          <span id="accNumber" class="value">5934039343</span>
+          <button class="copy-btn" onclick="copyAccNumber()">Copy</button>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <span class="label">
+          <i class="fa-solid fa-building-columns text-green-600"></i> Bank
+        </span>
+        <span id="bankName" class="value">MONIEPOINT</span>
+      </div>
+
+      <div class="info-item">
+        <span class="label">
+          <i class="fa-solid fa-user text-green-600"></i> Name
+        </span>
+        <span id="accName" class="value">JOSHUA .C.AMADI</span>
+      </div>
+    </div>
+
+    <p class="text-gray-700 text-xs text-center mt-4 max-w-xs leading-relaxed">
+      ⚠️ <b>Do not use Opay or Palmpay</b> for this transfer.<br />
+      Use other banks to complete your payment successfully.
+    </p>
+
+    <!-- Selected Plan Info -->
+    <div id="planDetails" class="plan-box hidden"></div>
+
+    <button
+      id="payBtn"
+      class="mt-4 w-full max-w-xs bg-green-600 text-white font-semibold py-2.5 rounded-lg hover:bg-green-700 transition text-sm"
+    >
+      I have made this bank transfer
+    </button>
+
+    <button
+      onclick="window.location.href='upgrade.html'"
+      class="text-xs text-green-700 hover:text-green-800 underline mt-2"
+    >
+      ← Back to Upgrade Plans
+    </button>
+
+    <script>
+      // Load selected plan
+      const plan = JSON.parse(localStorage.getItem("selectedPlan"));
+      const planDetails = document.getElementById("planDetails");
+
+      if (plan && plan.amount) {
+        document.getElementById("planAmount").textContent =
+          "₦" + plan.amount.toLocaleString();
+
+        // Create plan text
+        const earningText = plan.earning
+          ? ` - Mines ₦${plan.earning.toLocaleString()}`
+          : "";
+        planDetails.textContent = `Selected Plan: ₦${plan.amount.toLocaleString()}${earningText}`;
+        planDetails.classList.remove("hidden");
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "No Plan Selected",
+          text: "Please select a plan first.",
+          confirmButtonColor: "#22c55e",
+        }).then(() => {
+          window.location.href = "upgrade.html";
+        });
+      }
+
+      // Popup warning
+      window.addEventListener("load", () => {
+        Swal.fire({
+          icon: "warning",
+          title: "Important Notice",
+          html: `
+            <p class="text-gray-700 text-sm">
+              🚫 <b>Do not use Opay or Palmpay</b> for transfers.<br><br>
+              ✅ Use other banks like GTBank, Access, Zenith, etc.
+            </p>
+          `,
+          confirmButtonColor: "#22c55e",
+          confirmButtonText: "Got It",
+        });
+      });
+
+      // Copy account number
+      function copyAccNumber() {
+        const acc = document.getElementById("accNumber").textContent;
+        navigator.clipboard.writeText(acc).then(() => {
+          Swal.fire({
+            toast: true,
+            position: "top",
+            icon: "success",
+            title: "Account number copied!",
+            showConfirmButton: false,
+            timer: 1800,
+          });
+        });
+      }
+
+      // Payment confirmation
+      document.getElementById("payBtn").addEventListener("click", () => {
+        if (!plan) return;
+        Swal.fire({
+          title: "Confirm Payment",
+          text: `Have you made your payment of ₦${plan.amount.toLocaleString()}?`,
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: "Yes, Proceed",
+          cancelButtonText: "Not Yet",
+          confirmButtonColor: "#22c55e",
+        }).then((r) => {
+          if (r.isConfirmed) {
+            window.location.href = "result-failed.html";
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
