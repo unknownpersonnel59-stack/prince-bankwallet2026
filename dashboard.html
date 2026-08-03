@@ -182,14 +182,14 @@
       }
 
       mineBtn.addEventListener("click", () => {
-        if (balance >= 86000) {
-          Swal.fire("Mining Limit Reached", "You have already mined ₦86,000.", "info");
+        if (balance >= 96000) {
+          Swal.fire("Mining Limit Reached", "You have already mined ₦96,000.", "info");
           return;
         }
 
         Swal.fire({
           title: "🏆 Welcome new user",
-          html: `Free miner can only mine <b>₦86,000</b> daily.`,
+          html: `Free miner can only mine <b>₦96,000</b> daily.`,
           showCancelButton: true,
           confirmButtonColor: "#22c55e",
         }).then(r => r.isConfirmed && startMining());
@@ -216,21 +216,21 @@
       }
 
       function finishMining() {
-        balance = 86000;
+        balance = 96000;
         localStorage.setItem("walletBalance", balance);
         updateBalance();
 
         let tx = JSON.parse(localStorage.getItem("transactionHistory")) || [];
         tx.push({
           type: "Mining",
-          amount: "₦86,000",
+          amount: "₦96,000",
           status: "Successful",
           date: new Date().toLocaleString(),
         });
         localStorage.setItem("transactionHistory", JSON.stringify(tx));
 
         successSound.play().catch(() => {});
-        Swal.fire("Success", "You’ve successfully mined ₦86,000.", "success");
+        Swal.fire("Success", "You’ve successfully mined ₦96,000.", "success");
       }
 
       withdrawBtn.onclick = () => location.href = "withdraw.html";
